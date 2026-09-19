@@ -15,7 +15,7 @@ export default async function MeetingPage({ params }: MeetingPageProps) {
         notFound();
     }
 
-    const meeting = getMeetingById(meetingId);
+    const meeting = await getMeetingById(meetingId);
 
     if (!meeting) {
         notFound();
