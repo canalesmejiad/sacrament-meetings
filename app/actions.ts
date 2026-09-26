@@ -181,7 +181,7 @@ export async function createMeeting(
     }
 
     revalidatePath("/meetings");
-    redirect("/meetings");
+    redirect("/meetings?success=created");
 }
 
 export async function updateMeeting(
@@ -223,7 +223,7 @@ export async function updateMeeting(
 
     revalidatePath("/meetings");
     revalidatePath(`/meetings/${id}`);
-    redirect("/meetings");
+    redirect("/meetings?success=updated");
 }
 
 export async function deleteMeeting(
@@ -252,5 +252,5 @@ export async function deleteMeeting(
     }
 
     revalidatePath("/meetings");
-    redirect("/meetings");
+    redirect("/meetings?success=deleted");
 }
