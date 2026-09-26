@@ -1,5 +1,6 @@
 "use client";
 
+import MeetingActions from "@/components/MeetingActions";
 import type { SacramentMeeting } from "@/lib/types";
 
 interface MeetingDetailProps {
@@ -20,10 +21,14 @@ export default function MeetingDetail({
                 <p className="font-semibold uppercase tracking-widest text-sky-700">
                     {meeting.meetingType} meeting
                 </p>
+
                 <h1 className="mt-2 text-3xl font-bold text-slate-900">
                     Sacrament Meeting Program
                 </h1>
-                <p className="mt-2 text-slate-600">{formattedDate}</p>
+
+                <p className="mt-2 text-slate-600">
+                    {formattedDate}
+                </p>
 
                 <button
                     type="button"
@@ -34,7 +39,12 @@ export default function MeetingDetail({
                 </button>
             </header>
 
-            <section aria-labelledby="leadership-heading" className="py-6">
+            <MeetingActions meetingId={meeting.id} />
+
+            <section
+                aria-labelledby="leadership-heading"
+                className="py-6"
+            >
                 <h2
                     id="leadership-heading"
                     className="text-xl font-bold text-slate-900"
@@ -44,12 +54,21 @@ export default function MeetingDetail({
 
                 <dl className="mt-4 grid gap-4 sm:grid-cols-2">
                     <div>
-                        <dt className="font-semibold">Presiding</dt>
-                        <dd className="text-slate-600">{meeting.presiding}</dd>
+                        <dt className="font-semibold">
+                            Presiding
+                        </dt>
+                        <dd className="text-slate-600">
+                            {meeting.presiding}
+                        </dd>
                     </div>
+
                     <div>
-                        <dt className="font-semibold">Conducting</dt>
-                        <dd className="text-slate-600">{meeting.conducting}</dd>
+                        <dt className="font-semibold">
+                            Conducting
+                        </dt>
+                        <dd className="text-slate-600">
+                            {meeting.conducting}
+                        </dd>
                     </div>
                 </dl>
             </section>
@@ -67,12 +86,18 @@ export default function MeetingDetail({
 
                 {meeting.announcements?.length ? (
                     <ul className="mt-3 list-disc space-y-2 pl-6 text-slate-600">
-                        {meeting.announcements.map((announcement) => (
-                            <li key={announcement}>{announcement}</li>
-                        ))}
+                        {meeting.announcements.map(
+                            (announcement) => (
+                                <li key={announcement}>
+                                    {announcement}
+                                </li>
+                            ),
+                        )}
                     </ul>
                 ) : (
-                    <p className="mt-3 text-slate-600">No announcements.</p>
+                    <p className="mt-3 text-slate-600">
+                        No announcements.
+                    </p>
                 )}
             </section>
 
@@ -89,21 +114,31 @@ export default function MeetingDetail({
 
                 <dl className="mt-4 space-y-4">
                     <div>
-                        <dt className="font-semibold">Opening Hymn</dt>
+                        <dt className="font-semibold">
+                            Opening Hymn
+                        </dt>
                         <dd className="text-slate-600">
-                            #{meeting.openingHymn.number} — {meeting.openingHymn.title}
+                            #{meeting.openingHymn.number} —{" "}
+                            {meeting.openingHymn.title}
                         </dd>
                     </div>
 
                     <div>
-                        <dt className="font-semibold">Opening Prayer</dt>
-                        <dd className="text-slate-600">{meeting.openingPrayer}</dd>
+                        <dt className="font-semibold">
+                            Opening Prayer
+                        </dt>
+                        <dd className="text-slate-600">
+                            {meeting.openingPrayer}
+                        </dd>
                     </div>
 
                     <div>
-                        <dt className="font-semibold">Sacrament Hymn</dt>
+                        <dt className="font-semibold">
+                            Sacrament Hymn
+                        </dt>
                         <dd className="text-slate-600">
-                            #{meeting.sacramentHymn.number} — {meeting.sacramentHymn.title}
+                            #{meeting.sacramentHymn.number} —{" "}
+                            {meeting.sacramentHymn.title}
                         </dd>
                     </div>
                 </dl>
@@ -128,11 +163,15 @@ export default function MeetingDetail({
                 {meeting.wardBusiness?.length ? (
                     <ul className="mt-3 list-disc space-y-2 pl-6 text-slate-600">
                         {meeting.wardBusiness.map((item) => (
-                            <li key={item.description}>{item.description}</li>
+                            <li key={item.description}>
+                                {item.description}
+                            </li>
                         ))}
                     </ul>
                 ) : (
-                    <p className="mt-3 text-slate-600">No ward business.</p>
+                    <p className="mt-3 text-slate-600">
+                        No ward business.
+                    </p>
                 )}
             </section>
 
@@ -156,7 +195,11 @@ export default function MeetingDetail({
                             <p className="font-semibold text-slate-900">
                                 {speaker.name}
                             </p>
-                            <p className="text-slate-600">{speaker.topic}</p>
+
+                            <p className="text-slate-600">
+                                {speaker.topic}
+                            </p>
+
                             <p className="mt-1 text-sm capitalize text-sky-700">
                                 {speaker.type.replace("-", " ")}
                             </p>
@@ -178,14 +221,22 @@ export default function MeetingDetail({
 
                 <dl className="mt-4 space-y-4">
                     <div>
-                        <dt className="font-semibold">Closing Hymn</dt>
+                        <dt className="font-semibold">
+                            Closing Hymn
+                        </dt>
                         <dd className="text-slate-600">
-                            #{meeting.closingHymn.number} — {meeting.closingHymn.title}
+                            #{meeting.closingHymn.number} —{" "}
+                            {meeting.closingHymn.title}
                         </dd>
                     </div>
+
                     <div>
-                        <dt className="font-semibold">Closing Prayer</dt>
-                        <dd className="text-slate-600">{meeting.closingPrayer}</dd>
+                        <dt className="font-semibold">
+                            Closing Prayer
+                        </dt>
+                        <dd className="text-slate-600">
+                            {meeting.closingPrayer}
+                        </dd>
                     </div>
                 </dl>
             </section>
