@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 
+import { auth } from "@/auth";
 import {
     addMeeting,
     deleteMeeting as deleteMeetingFromDatabase,
@@ -14,6 +15,14 @@ export type MeetingFormState = {
     errors?: Record<string, string[] | undefined>;
     message?: string;
 };
+
+async function requireAdmin() {
+    const session = await auth();
+
+    if (!session?.user) {
+        redirect("/login");
+    }
+}
 
 const MeetingFormSchema = z.object({
     date: z.string().min(1, "Please select a meeting date."),
@@ -157,6 +166,7 @@ export async function createMeeting(
     previousState: MeetingFormState,
     formData: FormData,
 ): Promise<MeetingFormState> {
+    await requireAdmin();
     void previousState;
 
     const validatedFields = validateMeetingForm(formData);
@@ -189,6 +199,7 @@ export async function updateMeeting(
     previousState: MeetingFormState,
     formData: FormData,
 ): Promise<MeetingFormState> {
+    await requireAdmin();
     void previousState;
 
     const validatedFields = validateMeetingForm(formData);
@@ -231,6 +242,7 @@ export async function deleteMeeting(
     previousState: MeetingFormState,
     formData: FormData,
 ): Promise<MeetingFormState> {
+    await requireAdmin();
     void previousState;
     void formData;
 

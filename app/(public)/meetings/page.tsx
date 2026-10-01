@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 
 import MeetingCard from "@/components/MeetingCard";
@@ -7,6 +8,12 @@ import {
   getMeetings,
   getMeetingsTotalPages,
 } from "@/lib/meetings-db";
+
+export const metadata: Metadata = {
+  title: "Meetings",
+  description:
+    "Browse and review scheduled sacrament meeting programs.",
+};
 
 const successMessages = {
   created: "The meeting was created successfully.",
@@ -81,8 +88,7 @@ export default async function MeetingsPage({
           </h1>
 
           <p className="mt-4 text-lg leading-8 text-slate-600">
-            Select a Sunday to review its complete
-            meeting program.
+            Select a Sunday to review its complete meeting program.
           </p>
         </div>
 

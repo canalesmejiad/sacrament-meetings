@@ -12,12 +12,27 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"
+  ),
   title: {
     default: "Sacrament Meeting Planner",
     template: "%s | Sacrament Meeting Planner",
   },
   description:
     "Plan, manage, review, and print sacrament meeting programs.",
+  openGraph: {
+    title: "Sacrament Meeting Planner",
+    description:
+      "Plan, manage, review, and print sacrament meeting programs.",
+    type: "website",
+    images: [
+      {
+        url: "/meeting-planner.svg",
+        alt: "Sacrament Meeting Planner",
+      },
+    ],
+  },
 };
 
 export default function RootLayout({
