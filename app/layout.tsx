@@ -13,7 +13,8 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   metadataBase: new URL(
-    process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"
+    process.env.NEXT_PUBLIC_SITE_URL ??
+    "https://sacrament-meetings-ochre.vercel.app",
   ),
   title: {
     default: "Sacrament Meeting Planner",
@@ -26,12 +27,13 @@ export const metadata: Metadata = {
     description:
       "Plan, manage, review, and print sacrament meeting programs.",
     type: "website",
-    images: [
-      {
-        url: "/meeting-planner.svg",
-        alt: "Sacrament Meeting Planner",
-      },
-    ],
+    siteName: "Sacrament Meeting Planner",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Sacrament Meeting Planner",
+    description:
+      "Plan, manage, review, and print sacrament meeting programs.",
   },
 };
 
@@ -41,7 +43,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" data-scroll-behavior="smooth">
       <body
         className={`${inter.className} min-h-screen bg-slate-50 text-slate-900`}
       >
