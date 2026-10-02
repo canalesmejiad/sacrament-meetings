@@ -1,36 +1,158 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Sacrament Meeting Planner
+
+A Sacrament Meeting Planner built with Next.js, TypeScript, and PostgreSQL. The application provides public meeting information, administrative meeting management, authentication, search, pagination, and API endpoints.
 
 ## Getting Started
 
-First, run the development server:
+Install the project dependencies:
+
+```bash
+npm install
+```
+
+Start the development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+The meetings API is available at:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```text
+http://localhost:3000/api/meetings
+```
 
-## Learn More
+## Meetings API
 
-To learn more about Next.js, take a look at the following resources:
+The `GET /api/meetings` endpoint returns sacrament meeting records and supports explicit pagination.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Query parameters
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- `page`: Positive integer representing the requested page. Defaults to `1`.
+- `limit`: Positive integer representing the number of records per page. Defaults to `5` and cannot exceed `100`.
+- `date`: Optional search value used to filter meetings.
 
-## Deploy on Vercel
+### Example requests
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Retrieve the first five meetings:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```text
+GET /api/meetings?page=1&limit=5
+```
+
+Retrieve the next five meetings:
+
+```text
+GET /api/meetings?page=2&limit=5
+```
+
+Filter meetings while using pagination:
+
+```text
+GET /api/meetings?date=2026-01&page=1&limit=5
+```
+
+### Successful response
+
+A successful request returns the meeting records in `data` and pagination information in `pagination`:
+
+```json
+{
+  "data": [],
+  "pagination": {
+    "page": 2,
+    "limit": 5,
+    "totalPages": 2
+  }
+}
+```
+
+Clients can request additional pages to retrieve records beyond the first five meetings.
+
+### Pagination validation
+
+The API validates the pagination parameters.
+
+The following values are invalid:
+
+- `page=0`
+- `page=abc`
+- `limit=0`
+- `limit=101`
+
+An invalid request returns HTTP status `400` with a JSON error response.
+
+Example:
+
+```json
+{
+  "error": "Invalid pagination parameters.",
+  "details": {
+    "page": "The page parameter must be a positive integer."
+  }
+}
+```
+
+The `limit` parameter must be between `1` and `100`.
+
+Example limit error:
+
+```json
+{
+  "error": "Invalid pagination parameters.",
+  "details": {
+    "limit": "The limit parameter must be a positive integer between 1 and 100."
+  }
+}
+```
+
+## Available Scripts
+
+Run the development server:
+
+```bash
+npm run dev
+```
+
+Run ESLint:
+
+```bash
+npm run lint
+```
+
+Create a production build:
+
+```bash
+npm run build
+```
+
+Start the production server:
+
+```bash
+npm start
+```
+
+## Technologies
+
+- Next.js
+- React
+- TypeScript
+- PostgreSQL
+- Neon Serverless
+- NextAuth
+- Tailwind CSS
+- Vercel
+
+## Deployment
+
+The application is deployed on Vercel:
+
+[https://sacrament-meetings-ochre.vercel.app](https://sacrament-meetings-ochre.vercel.app)
+
+## Additional Resources
+
+- [Next.js Documentation](https://nextjs.org/docs)
+- [Learn Next.js](https://nextjs.org/learn)
+- [Vercel Deployment Documentation](https://nextjs.org/docs/app/building-your-application/deploying)
