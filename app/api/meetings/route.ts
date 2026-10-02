@@ -51,7 +51,8 @@ export async function GET(request: NextRequest) {
             {
                 error: "Invalid pagination parameters.",
                 details: {
-                    page: "The page parameter must be a positive integer.",
+                    page:
+                        "The page parameter must be a positive integer.",
                 },
             },
             { status: 400 },
@@ -65,6 +66,19 @@ export async function GET(request: NextRequest) {
                 details: {
                     limit:
                         "The limit parameter must be a positive integer between 1 and 100.",
+                },
+            },
+            { status: 400 },
+        );
+    }
+
+    if (!Number.isSafeInteger((page - 1) * limit)) {
+        return NextResponse.json(
+            {
+                error: "Invalid pagination parameters.",
+                details: {
+                    page:
+                        "The page parameter is too large for the selected limit.",
                 },
             },
             { status: 400 },
