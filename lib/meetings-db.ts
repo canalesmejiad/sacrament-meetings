@@ -8,9 +8,10 @@ const ITEMS_PER_PAGE = 5;
 export async function getMeetings(
     query = "",
     currentPage = 1,
+    itemsPerPage = ITEMS_PER_PAGE,
 ): Promise<SacramentMeeting[]> {
     const searchTerm = `%${query.trim()}%`;
-    const offset = (currentPage - 1) * ITEMS_PER_PAGE;
+    const offset = (currentPage - 1) * itemsPerPage;
 
     const rows = await sql`
         SELECT
@@ -36,7 +37,7 @@ export async function getMeetings(
             OR meeting_type ILIKE ${searchTerm}
             OR speakers::text ILIKE ${searchTerm}
         ORDER BY date DESC
-        LIMIT ${ITEMS_PER_PAGE}
+        LIMIT ${itemsPerPage}
         OFFSET ${offset}
     `;
 
@@ -45,6 +46,7 @@ export async function getMeetings(
 
 export async function getMeetingsTotalPages(
     query = "",
+    itemsPerPage = ITEMS_PER_PAGE,
 ): Promise<number> {
     const searchTerm = `%${query.trim()}%`;
 
@@ -59,7 +61,7 @@ export async function getMeetingsTotalPages(
             OR speakers::text ILIKE ${searchTerm}
     `;
 
-    return Math.ceil(Number(rows[0].count) / ITEMS_PER_PAGE);
+    return Math.ceil(Number(rows[0].count) / itemsPerPage);
 }
 
 export async function getMeetingById(
@@ -116,8 +118,7 @@ export async function addMeeting(
                 SELECT jsonb_array_elements_text(
                     ${JSON.stringify(
         data.announcements ?? [],
-    )
-        }::jsonb
+    )}::jsonb
                 )
             ),
             ${JSON.stringify(data.openingHymn)}::jsonb,
@@ -158,21 +159,24 @@ export async function updateMeeting(
                 SELECT jsonb_array_elements_text(
                     ${JSON.stringify(
         data.announcements ?? [],
-    )
-        }::jsonb
+    )}::jsonb
                 )
             ),
-            opening_hymn = ${JSON.stringify(data.openingHymn)
-        }::jsonb,
+            opening_hymn = ${JSON.stringify(
+        data.openingHymn,
+    )}::jsonb,
             opening_prayer = ${data.openingPrayer},
-            ward_business = ${JSON.stringify(data.wardBusiness ?? [])
-        }::jsonb,
+            ward_business = ${JSON.stringify(
+        data.wardBusiness ?? [],
+    )}::jsonb,
             stake_business = ${data.stakeBusiness},
-            sacrament_hymn = ${JSON.stringify(data.sacramentHymn)
-        }::jsonb,
+            sacrament_hymn = ${JSON.stringify(
+        data.sacramentHymn,
+    )}::jsonb,
             speakers = ${JSON.stringify(data.speakers)}::jsonb,
-            closing_hymn = ${JSON.stringify(data.closingHymn)
-        }::jsonb,
+            closing_hymn = ${JSON.stringify(
+        data.closingHymn,
+    )}::jsonb,
             closing_prayer = ${data.closingPrayer}
         WHERE id = ${id}
         RETURNING id
