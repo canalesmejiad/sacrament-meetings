@@ -1,6 +1,9 @@
+import bcrypt from "bcryptjs";
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import { z } from "zod";
+
+import authConfig from "./auth.config";
 
 const credentialsSchema = z.object({
     email: z.email(),
@@ -8,38 +11,54 @@ const credentialsSchema = z.object({
 });
 
 export const { auth, handlers, signIn, signOut } = NextAuth({
-    pages: {
-        signIn: "/login",
-    },
+    ...authConfig,
     providers: [
         Credentials({
             credentials: {
-                email: { label: "Email", type: "email" },
-                password: { label: "Password", type: "password" },
+                email: {
+                    label: "Email",
+                    type: "email",
+                },
+                password: {
+                    label: "Password",
+                    type: "password",
+                },
             },
-            authorize(credentials) {
-                const result = credentialsSchema.safeParse(credentials);
+
+            async authorize(credentials) {
+                const result =
+                    credentialsSchema.safeParse(credentials);
 
                 if (!result.success) {
                     return null;
                 }
 
                 const { email, password } = result.data;
-                const validEmail = process.env.ADMIN_EMAIL;
-                const validPassword = process.env.ADMIN_PASSWORD;
+                const validEmail =
+                    process.env.ADMIN_EMAIL?.toLowerCase();
+                const passwordHash =
+                    process.env.ADMIN_PASSWORD_HASH;
 
-                if (!validEmail || !validPassword) {
+                if (!validEmail || !passwordHash) {
                     return null;
                 }
 
-                if (email !== validEmail || password !== validPassword) {
+                const emailMatches =
+                    email.toLowerCase() === validEmail;
+
+                const passwordMatches = await bcrypt.compare(
+                    password,
+                    passwordHash,
+                );
+
+                if (!emailMatches || !passwordMatches) {
                     return null;
                 }
 
                 return {
                     id: "bishopric-admin",
                     name: "Bishopric Administrator",
-                    email,
+                    email: validEmail,
                 };
             },
         }),
