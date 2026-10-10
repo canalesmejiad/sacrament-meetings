@@ -7,6 +7,7 @@ const links = [
     { href: "/", label: "Home" },
     { href: "/meetings", label: "Meetings" },
     { href: "/meetings/current", label: "Current Meeting" },
+    { href: "/hymns", label: "Hymns" },
 ];
 
 export default function NavLinks() {
@@ -22,13 +23,18 @@ export default function NavLinks() {
                     const isActive =
                         link.href === "/"
                             ? pathname === "/"
-                            : pathname === link.href ||
-                            pathname.startsWith(`${link.href}/`);
+                            : link.href === "/meetings"
+                                ? pathname === "/meetings" ||
+                                (pathname.startsWith("/meetings/") &&
+                                    pathname !== "/meetings/current")
+                                : pathname === link.href ||
+                                pathname.startsWith(`${link.href}/`);
 
                     return (
                         <li key={link.href}>
                             <Link
                                 href={link.href}
+                                aria-current={isActive ? "page" : undefined}
                                 className={`block rounded-md px-4 py-2 font-medium transition ${isActive
                                         ? "bg-sky-700 text-white"
                                         : "text-slate-700 hover:bg-sky-100 hover:text-sky-900"
