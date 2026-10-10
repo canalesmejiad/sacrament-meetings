@@ -134,6 +134,18 @@ Start the production server:
 npm start
 ```
 
+## Meeting form validation checklist
+
+Use this manual checklist when reviewing the create and edit meeting forms:
+
+1. Submit an empty form and confirm that a summary links to each invalid field.
+2. Select a date that is not a Sunday and confirm that it is rejected.
+3. Enter a hymn number above `999` and confirm that it is rejected.
+4. Enter a speaker without the `Name | Topic` format and confirm that it is rejected.
+5. Correct the highlighted fields and confirm that the meeting saves successfully.
+6. Confirm that a success message appears on the meetings page after saving.
+7. Test the form at a narrow mobile viewport and confirm that every field and action remains usable.
+
 ## Technologies
 
 - Next.js

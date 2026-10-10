@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 import { useFormStatus } from "react-dom";
 
 import type { MeetingFormState } from "@/app/actions";
@@ -24,7 +24,25 @@ interface FieldErrorsProps {
 }
 
 const inputStyles =
-    "mt-2 w-full rounded-lg border border-slate-300 px-3 py-2 text-slate-900";
+    "mt-2 w-full rounded-lg border border-slate-300 px-3 py-2 text-slate-900 aria-invalid:border-red-600 aria-invalid:ring-1 aria-invalid:ring-red-600";
+
+const fieldLabels: Record<string, string> = {
+    date: "Meeting date",
+    meetingType: "Meeting type",
+    presiding: "Presiding",
+    conducting: "Conducting",
+    announcements: "Announcements",
+    openingHymnNumber: "Opening hymn number",
+    openingHymnTitle: "Opening hymn title",
+    openingPrayer: "Opening prayer",
+    wardBusiness: "Ward business",
+    sacramentHymnNumber: "Sacrament hymn number",
+    sacramentHymnTitle: "Sacrament hymn title",
+    speakers: "Speakers",
+    closingHymnNumber: "Closing hymn number",
+    closingHymnTitle: "Closing hymn title",
+    closingPrayer: "Closing prayer",
+};
 
 function FieldErrors({ id, errors }: FieldErrorsProps) {
     if (!errors?.length) {
@@ -69,9 +87,35 @@ export default function MeetingForm({
         initialState,
     );
 
-    const speakers = meeting?.speakers
-        .map((speaker) => `${speaker.name} | ${speaker.topic}`)
-        .join("\n");
+    const invalidFields = Object.entries(state.errors ?? {}).filter(
+        ([, errors]) => Boolean(errors?.length),
+    );
+
+    const [values, setValues] = useState(() => ({
+        date: meeting?.date ?? "",
+        meetingType: String(meeting?.meetingType ?? "regular"),
+        presiding: meeting?.presiding ?? "",
+        conducting: meeting?.conducting ?? "",
+        announcements: meeting?.announcements?.join("\n") ?? "",
+        openingHymnNumber: meeting?.openingHymn.number?.toString() ?? "",
+        openingHymnTitle: meeting?.openingHymn.title ?? "",
+        openingPrayer: meeting?.openingPrayer ?? "",
+        wardBusiness: meeting?.wardBusiness?.map((item) => item.description).join("\n") ?? "",
+        stakeBusiness: meeting?.stakeBusiness ?? false,
+        sacramentHymnNumber: meeting?.sacramentHymn.number?.toString() ?? "",
+        sacramentHymnTitle: meeting?.sacramentHymn.title ?? "",
+        speakers: meeting?.speakers.map((speaker) => `${speaker.name} | ${speaker.topic}`).join("\n") ?? "",
+        closingHymnNumber: meeting?.closingHymn.number?.toString() ?? "",
+        closingHymnTitle: meeting?.closingHymn.title ?? "",
+        closingPrayer: meeting?.closingPrayer ?? "",
+    }));
+
+    function updateValue<K extends keyof typeof values>(
+        field: K,
+        value: (typeof values)[K],
+    ) {
+        setValues((previous) => ({ ...previous, [field]: value }));
+    }
 
     return (
         <form
@@ -79,6 +123,31 @@ export default function MeetingForm({
             noValidate
             className="space-y-6"
         >
+            {invalidFields.length > 0 && (
+                <div
+                    role="alert"
+                    aria-live="polite"
+                    className="rounded-lg border border-red-300 bg-red-50 p-4 text-red-900"
+                >
+                    <h2 className="font-semibold">
+                        {state.message || "Please correct the form errors."}
+                    </h2>
+                    <ul className="mt-2 list-disc space-y-1 pl-5">
+                        {invalidFields.map(([field, errors]) => (
+                            <li key={field}>
+                                <a
+                                    href={`#${field}`}
+                                    className="font-medium underline hover:no-underline"
+                                >
+                                    {fieldLabels[field] ?? field}
+                                </a>
+                                {errors?.[0] ? `: ${errors[0]}` : ""}
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+            )}
+
             <div>
                 <label
                     htmlFor="date"
@@ -91,7 +160,8 @@ export default function MeetingForm({
                     name="date"
                     type="date"
                     required
-                    defaultValue={meeting?.date}
+                    value={values.date}
+                    onChange={(event) => updateValue("date", event.target.value)}
                     aria-invalid={Boolean(state.errors?.date)}
                     aria-describedby={
                         state.errors?.date ? "date-error" : undefined
@@ -115,7 +185,8 @@ export default function MeetingForm({
                     id="meetingType"
                     name="meetingType"
                     required
-                    defaultValue={meeting?.meetingType ?? "regular"}
+                    value={values.meetingType}
+                    onChange={(event) => updateValue("meetingType", event.target.value)}
                     aria-invalid={Boolean(
                         state.errors?.meetingType,
                     )}
@@ -152,7 +223,9 @@ export default function MeetingForm({
                         id="presiding"
                         name="presiding"
                         required
-                        defaultValue={meeting?.presiding}
+                        maxLength={100}
+                        value={values.presiding}
+                        onChange={(event) => updateValue("presiding", event.target.value)}
                         aria-invalid={Boolean(
                             state.errors?.presiding,
                         )}
@@ -180,7 +253,9 @@ export default function MeetingForm({
                         id="conducting"
                         name="conducting"
                         required
-                        defaultValue={meeting?.conducting}
+                        maxLength={100}
+                        value={values.conducting}
+                        onChange={(event) => updateValue("conducting", event.target.value)}
                         aria-invalid={Boolean(
                             state.errors?.conducting,
                         )}
@@ -212,8 +287,22 @@ export default function MeetingForm({
                     id="announcements"
                     name="announcements"
                     rows={4}
-                    defaultValue={meeting?.announcements?.join("\n")}
+                    maxLength={2000}
+                    value={values.announcements}
+                    onChange={(event) => updateValue("announcements", event.target.value)}
+                    aria-invalid={Boolean(
+                        state.errors?.announcements,
+                    )}
+                    aria-describedby={
+                        state.errors?.announcements
+                            ? "announcements-error"
+                            : undefined
+                    }
                     className={inputStyles}
+                />
+                <FieldErrors
+                    id="announcements-error"
+                    errors={state.errors?.announcements}
                 />
             </div>
 
@@ -235,10 +324,10 @@ export default function MeetingForm({
                             name="openingHymnNumber"
                             type="number"
                             min="1"
+                            max="999"
                             required
-                            defaultValue={
-                                meeting?.openingHymn.number
-                            }
+                            value={values.openingHymnNumber}
+                            onChange={(event) => updateValue("openingHymnNumber", event.target.value)}
                             aria-invalid={Boolean(
                                 state.errors?.openingHymnNumber,
                             )}
@@ -268,9 +357,9 @@ export default function MeetingForm({
                             id="openingHymnTitle"
                             name="openingHymnTitle"
                             required
-                            defaultValue={
-                                meeting?.openingHymn.title
-                            }
+                            maxLength={150}
+                            value={values.openingHymnTitle}
+                            onChange={(event) => updateValue("openingHymnTitle", event.target.value)}
                             aria-invalid={Boolean(
                                 state.errors?.openingHymnTitle,
                             )}
@@ -302,7 +391,9 @@ export default function MeetingForm({
                     id="openingPrayer"
                     name="openingPrayer"
                     required
-                    defaultValue={meeting?.openingPrayer}
+                    maxLength={100}
+                    value={values.openingPrayer}
+                    onChange={(event) => updateValue("openingPrayer", event.target.value)}
                     aria-invalid={Boolean(
                         state.errors?.openingPrayer,
                     )}
@@ -333,10 +424,22 @@ export default function MeetingForm({
                     id="wardBusiness"
                     name="wardBusiness"
                     rows={4}
-                    defaultValue={meeting?.wardBusiness
-                        ?.map((item) => item.description)
-                        .join("\n")}
+                    maxLength={2000}
+                    value={values.wardBusiness}
+                    onChange={(event) => updateValue("wardBusiness", event.target.value)}
+                    aria-invalid={Boolean(
+                        state.errors?.wardBusiness,
+                    )}
+                    aria-describedby={
+                        state.errors?.wardBusiness
+                            ? "wardBusiness-error"
+                            : undefined
+                    }
                     className={inputStyles}
+                />
+                <FieldErrors
+                    id="wardBusiness-error"
+                    errors={state.errors?.wardBusiness}
                 />
             </div>
 
@@ -345,7 +448,8 @@ export default function MeetingForm({
                     id="stakeBusiness"
                     name="stakeBusiness"
                     type="checkbox"
-                    defaultChecked={meeting?.stakeBusiness}
+                    checked={values.stakeBusiness}
+                    onChange={(event) => updateValue("stakeBusiness", event.target.checked)}
                     className="h-5 w-5"
                 />
                 <label
@@ -374,10 +478,10 @@ export default function MeetingForm({
                             name="sacramentHymnNumber"
                             type="number"
                             min="1"
+                            max="999"
                             required
-                            defaultValue={
-                                meeting?.sacramentHymn.number
-                            }
+                            value={values.sacramentHymnNumber}
+                            onChange={(event) => updateValue("sacramentHymnNumber", event.target.value)}
                             aria-invalid={Boolean(
                                 state.errors?.sacramentHymnNumber,
                             )}
@@ -407,9 +511,9 @@ export default function MeetingForm({
                             id="sacramentHymnTitle"
                             name="sacramentHymnTitle"
                             required
-                            defaultValue={
-                                meeting?.sacramentHymn.title
-                            }
+                            maxLength={150}
+                            value={values.sacramentHymnTitle}
+                            onChange={(event) => updateValue("sacramentHymnTitle", event.target.value)}
                             aria-invalid={Boolean(
                                 state.errors?.sacramentHymnTitle,
                             )}
@@ -445,7 +549,9 @@ export default function MeetingForm({
                     name="speakers"
                     rows={5}
                     required
-                    defaultValue={speakers}
+                    maxLength={2000}
+                    value={values.speakers}
+                    onChange={(event) => updateValue("speakers", event.target.value)}
                     aria-invalid={Boolean(state.errors?.speakers)}
                     aria-describedby={
                         state.errors?.speakers
@@ -478,10 +584,10 @@ export default function MeetingForm({
                             name="closingHymnNumber"
                             type="number"
                             min="1"
+                            max="999"
                             required
-                            defaultValue={
-                                meeting?.closingHymn.number
-                            }
+                            value={values.closingHymnNumber}
+                            onChange={(event) => updateValue("closingHymnNumber", event.target.value)}
                             aria-invalid={Boolean(
                                 state.errors?.closingHymnNumber,
                             )}
@@ -511,9 +617,9 @@ export default function MeetingForm({
                             id="closingHymnTitle"
                             name="closingHymnTitle"
                             required
-                            defaultValue={
-                                meeting?.closingHymn.title
-                            }
+                            maxLength={150}
+                            value={values.closingHymnTitle}
+                            onChange={(event) => updateValue("closingHymnTitle", event.target.value)}
                             aria-invalid={Boolean(
                                 state.errors?.closingHymnTitle,
                             )}
@@ -545,7 +651,9 @@ export default function MeetingForm({
                     id="closingPrayer"
                     name="closingPrayer"
                     required
-                    defaultValue={meeting?.closingPrayer}
+                    maxLength={100}
+                    value={values.closingPrayer}
+                    onChange={(event) => updateValue("closingPrayer", event.target.value)}
                     aria-invalid={Boolean(
                         state.errors?.closingPrayer,
                     )}
@@ -562,7 +670,7 @@ export default function MeetingForm({
                 />
             </div>
 
-            {state.message && (
+            {state.message && invalidFields.length === 0 && (
                 <p
                     role="alert"
                     aria-live="polite"
