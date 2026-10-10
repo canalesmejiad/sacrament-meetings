@@ -5,100 +5,100 @@ import MeetingsList from "@/components/MeetingsList";
 import Search from "@/components/Search";
 
 export const metadata: Metadata = {
-  title: "Meetings",
-  description:
-    "Browse and review scheduled sacrament meeting programs.",
+    title: "Meetings",
+    description:
+        "Browse and review scheduled sacrament meeting programs.",
 };
 
 const successMessages = {
-  created: "The meeting was created successfully.",
-  updated: "The meeting was updated successfully.",
-  deleted: "The meeting was deleted successfully.",
+    created: "The meeting was created successfully.",
+    updated: "The meeting was updated successfully.",
+    deleted: "The meeting was deleted successfully.",
 } as const;
 
 interface MeetingsPageProps {
-  searchParams: Promise<{
-    query?: string;
-    page?: string;
-    success?: string;
-  }>;
+    searchParams: Promise<{
+        query?: string;
+        page?: string;
+        success?: string;
+    }>;
 }
 
 export default async function MeetingsPage({
-  searchParams,
+    searchParams,
 }: MeetingsPageProps) {
-  const params = await searchParams;
+    const params = await searchParams;
 
-  const query =
-    typeof params.query === "string" ? params.query : "";
+    const query =
+        typeof params.query === "string" ? params.query : "";
 
-  const requestedPage = Number(params.page);
-  const currentPage =
-    Number.isInteger(requestedPage) && requestedPage > 0
-      ? requestedPage
-      : 1;
+    const requestedPage = Number(params.page);
+    const currentPage =
+        Number.isInteger(requestedPage) && requestedPage > 0
+            ? requestedPage
+            : 1;
 
-  const successMessage =
-    typeof params.success === "string"
-      ? successMessages[
-      params.success as keyof typeof successMessages
-      ]
-      : undefined;
+    const successMessage =
+        typeof params.success === "string"
+            ? successMessages[
+            params.success as keyof typeof successMessages
+            ]
+            : undefined;
 
-  return (
-    <section aria-labelledby="meetings-heading">
-      {successMessage && (
-        <div
-          role="status"
-          aria-live="polite"
-          className="mb-8 flex flex-wrap items-center justify-between gap-4 rounded-xl border border-emerald-300 bg-emerald-50 p-4 text-emerald-900"
-        >
-          <p className="font-medium">{successMessage}</p>
+    return (
+        <section aria-labelledby="meetings-heading">
+            {successMessage && (
+                <div
+                    role="status"
+                    aria-live="polite"
+                    className="mb-8 flex flex-wrap items-center justify-between gap-4 rounded-xl border border-emerald-300 bg-emerald-50 p-4 text-emerald-900"
+                >
+                    <p className="font-medium">{successMessage}</p>
 
-          <Link
-            href="/meetings"
-            className="font-semibold underline hover:no-underline"
-          >
-            Dismiss
-          </Link>
-        </div>
-      )}
+                    <Link
+                        href="/meetings"
+                        className="font-semibold underline hover:no-underline"
+                    >
+                        Dismiss
+                    </Link>
+                </div>
+            )}
 
-      <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
-        <div className="max-w-2xl">
-          <p className="font-semibold uppercase tracking-widest text-sky-700">
-            Meeting archive
-          </p>
+            <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
+                <div className="max-w-2xl">
+                    <p className="font-semibold uppercase tracking-widest text-sky-800">
+                        Meeting archive
+                    </p>
 
-          <h1
-            id="meetings-heading"
-            className="mt-2 text-4xl font-bold tracking-tight text-slate-900"
-          >
-            Sacrament meetings
-          </h1>
+                    <h1
+                        id="meetings-heading"
+                        className="mt-2 text-4xl font-bold tracking-tight text-slate-900"
+                    >
+                        Sacrament meetings
+                    </h1>
 
-          <p className="mt-4 text-lg leading-8 text-slate-600">
-            Select a Sunday to review its complete meeting program.
-          </p>
-        </div>
+                    <p className="mt-4 text-lg leading-8 text-slate-600">
+                        Select a Sunday to review its complete meeting program.
+                    </p>
+                </div>
 
-        <Link
-          href="/meetings/new"
-          className="inline-flex w-fit rounded-lg bg-sky-700 px-5 py-3 font-semibold text-white shadow-sm hover:bg-sky-800 focus:outline-none focus:ring-2 focus:ring-sky-600 focus:ring-offset-2"
-        >
-          Create meeting
-        </Link>
-      </div>
+                <Link
+                    href="/meetings/new"
+                    className="inline-flex w-fit rounded-lg bg-sky-800 px-5 py-3 font-semibold text-white shadow-sm hover:bg-sky-900 focus:outline-none focus:ring-2 focus:ring-sky-600 focus:ring-offset-2"
+                >
+                    Create meeting
+                </Link>
+            </div>
 
-      <div className="max-w-2xl">
-        <Search placeholder="Search by date, type, leader, or speaker..." />
-      </div>
+            <div className="max-w-2xl">
+                <Search placeholder="Search by date, type, leader, or speaker..." />
+            </div>
 
-      <MeetingsList
-        query={query}
-        currentPage={currentPage}
-        success={params.success ?? ""}
-      />
-    </section>
-  );
+            <MeetingsList
+                query={query}
+                currentPage={currentPage}
+                success={params.success ?? ""}
+            />
+        </section>
+    );
 }

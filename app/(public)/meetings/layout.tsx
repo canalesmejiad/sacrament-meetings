@@ -18,7 +18,7 @@ export default function MeetingsLayout({
                     All meetings
                 </Link>
 
-                <span aria-hidden="true" className="text-sky-400">
+                <span aria-hidden="true" className="text-sky-800">
                     |
                 </span>
 
