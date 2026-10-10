@@ -1,13 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
-import MeetingCard from "@/components/MeetingCard";
-import Pagination from "@/components/Pagination";
+import MeetingsList from "@/components/MeetingsList";
 import Search from "@/components/Search";
-import {
-  getMeetings,
-  getMeetingsTotalPages,
-} from "@/lib/meetings-db";
 
 export const metadata: Metadata = {
   title: "Meetings",
@@ -49,11 +44,6 @@ export default async function MeetingsPage({
       params.success as keyof typeof successMessages
       ]
       : undefined;
-
-  const [meetings, totalPages] = await Promise.all([
-    getMeetings(query, currentPage),
-    getMeetingsTotalPages(query),
-  ]);
 
   return (
     <section aria-labelledby="meetings-heading">
@@ -104,30 +94,11 @@ export default async function MeetingsPage({
         <Search placeholder="Search by date, type, leader, or speaker..." />
       </div>
 
-      {meetings.length > 0 ? (
-        <>
-          <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {meetings.map((meeting) => (
-              <MeetingCard
-                key={meeting.id}
-                meeting={meeting}
-              />
-            ))}
-          </div>
-
-          <Pagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-          />
-        </>
-      ) : (
-        <p
-          role="status"
-          className="mt-10 rounded-xl border border-slate-200 bg-white p-6 text-slate-700"
-        >
-          No meetings matched your search.
-        </p>
-      )}
+      <MeetingsList
+        query={query}
+        currentPage={currentPage}
+        success={params.success ?? ""}
+      />
     </section>
   );
 }

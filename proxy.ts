@@ -10,5 +10,7 @@ export const config = {
     matcher: [
         "/meetings/new",
         "/meetings/:id/edit",
+        "/hymns",
+        "/hymns/:path*",
     ],
 };
