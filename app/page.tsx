@@ -6,7 +6,7 @@ export default function Home() {
     <div className="space-y-16">
       <section className="grid items-center gap-10 lg:grid-cols-2">
         <div>
-          <p className="mb-3 font-semibold uppercase tracking-widest text-sky-700">
+          <p className="mb-3 font-semibold uppercase tracking-widest text-sky-800">
             Plan with purpose
           </p>
 
@@ -15,14 +15,14 @@ export default function Home() {
           </h1>
 
           <p className="mt-6 max-w-xl text-lg leading-8 text-slate-600">
-            View meeting agendas, review hymns and speakers, and prepare
-            printable programs for current and past Sundays.
+            View meeting agendas, review hymns and speakers, and
+            prepare printable programs for current and past Sundays.
           </p>
 
           <div className="mt-8 flex flex-wrap gap-4">
             <Link
               href="/meetings"
-              className="rounded-md bg-sky-700 px-5 py-3 font-semibold text-white shadow-sm transition hover:bg-sky-800"
+              className="rounded-md bg-sky-800 px-5 py-3 font-semibold text-white shadow-sm transition hover:bg-sky-900"
             >
               View all meetings
             </Link>
@@ -76,6 +76,7 @@ export default function Home() {
               <h3 className="text-xl font-bold text-slate-900">
                 {feature.title}
               </h3>
+
               <p className="mt-3 leading-7 text-slate-600">
                 {feature.text}
               </p>

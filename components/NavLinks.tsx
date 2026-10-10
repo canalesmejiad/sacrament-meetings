@@ -36,7 +36,7 @@ export default function NavLinks() {
                                 href={link.href}
                                 aria-current={isActive ? "page" : undefined}
                                 className={`block rounded-md px-4 py-2 font-medium transition ${isActive
-                                        ? "bg-sky-700 text-white"
+                                        ? "bg-sky-800 text-white"
                                         : "text-slate-700 hover:bg-sky-100 hover:text-sky-900"
                                     }`}
                             >
