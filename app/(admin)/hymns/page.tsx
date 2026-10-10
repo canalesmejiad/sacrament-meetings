@@ -64,7 +64,7 @@ export default async function HymnsPage({
 
                 <Link
                     href="/hymns/new"
-                    className="rounded-lg bg-blue-700 px-5 py-3 font-semibold text-white hover:bg-blue-800"
+                    className="rounded-lg bg-blue-800 px-5 py-3 font-semibold text-white hover:bg-blue-900"
                 >
                     Create hymn
                 </Link>

@@ -67,7 +67,7 @@ export default function LoginForm() {
                 type="submit"
                 disabled={isPending}
                 aria-disabled={isPending}
-                className="w-full rounded-lg bg-blue-700 px-4 py-2 font-semibold text-white disabled:cursor-not-allowed disabled:opacity-60"
+                className="w-full rounded-lg bg-blue-800 px-4 py-2 font-semibold text-white disabled:cursor-not-allowed disabled:opacity-60"
             >
                 {isPending ? "Signing in..." : "Sign in"}
             </button>
