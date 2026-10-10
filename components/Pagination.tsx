@@ -41,7 +41,7 @@ export default function Pagination({
             ) : (
                 <span
                     aria-disabled="true"
-                    className="cursor-not-allowed rounded-lg border border-slate-200 bg-slate-100 px-4 py-2 text-slate-400"
+                    className="cursor-not-allowed rounded-lg border border-slate-200 bg-slate-100 px-4 py-2 text-slate-700"
                 >
                     Previous
                 </span>
@@ -58,7 +58,7 @@ export default function Pagination({
                         aria-current={isCurrentPage ? "page" : undefined}
                         className={
                             isCurrentPage
-                                ? "rounded-lg bg-sky-700 px-4 py-2 font-semibold text-white"
+                                ? "rounded-lg bg-sky-800 px-4 py-2 font-semibold text-white"
                                 : "rounded-lg border border-slate-300 bg-white px-4 py-2 font-semibold text-slate-700 hover:bg-slate-100"
                         }
                     >
@@ -77,7 +77,7 @@ export default function Pagination({
             ) : (
                 <span
                     aria-disabled="true"
-                    className="cursor-not-allowed rounded-lg border border-slate-200 bg-slate-100 px-4 py-2 text-slate-400"
+                    className="cursor-not-allowed rounded-lg border border-slate-200 bg-slate-100 px-4 py-2 text-slate-700"
                 >
                     Next
                 </span>
